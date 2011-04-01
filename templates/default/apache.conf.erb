@@ -1,0 +1,115 @@
+# This is the apache configuration when running opsview-web over a proxy mechanism
+Listen 8081
+<VirtualHost *:8081>
+  #ServerName 195.137.61.81
+  #ServerAdmin opsview@opsera.com
+  
+  # Any files in here will be served by Apache
+  DocumentRoot /usr/local/nagios/share
+  <Directory /usr/local/nagios/share>
+    Order allow,deny
+    Allow from all
+  </Directory>
+  
+  # This alias required so that Apache serves NMIS' static files
+  Alias /static/nmis/ "/usr/local/nagios/nmis/htdocs/"
+  <Directory /usr/local/nagios/nmis/htdocs>
+    Order allow,deny
+    Allow from all
+  </Directory>
+  
+  ProxyRequests Off
+  <Proxy *>
+    Order deny,allow
+    Allow from all
+  </Proxy>
+  
+  # Don't proxy error pages as these are served statically
+  ProxyPass /error_pages !
+  ProxyPass /javascript !
+  ProxyPass /stylesheets !
+  ProxyPass /help !
+  ProxyPass /images !
+  ProxyPass /xml !
+  ProxyPass /favicon.ico !
+  ProxyPass /graphs !
+  ProxyPass /static !
+  ProxyPass /media !
+  
+  # Rules for those people using webmin on their server - this allows an entry 
+  # to be added to the Modules list
+  #RewriteEngine on
+  #RewriteRule ^/webmin(.*) https://%{SERVER_NAME}:10000/$1 [R=permanent,L]
+  
+  # Enables Nagvis - requires php5
+  # Ensure the apache user is a member of the nagcmd group.
+  <Directory /usr/local/nagios/nagvis>
+    Order allow,deny
+    Allow from all
+  </Directory>
+  Alias /nagvis /usr/local/nagios/nagvis
+  ProxyPass /nagvis !
+  # Have two authentication options for Nagvis.
+  # Authtkt requires the AuthTkt apache module and allows single-sign-on with Opsview
+  # Set this to the same as the shared secret in opsview.conf
+  #TKTAuthSecret "shared-secret-please-change"
+  #<Location /nagvis>
+  #   Order allow,deny
+  #   Allow from all
+  #   AuthType None
+  #   TKTAuthLoginURL /login?app=nagvis
+  #   TKTAuthTimeout 86400s
+  #   # Set below if you are getting "ticket is invalid" messages and you have multiple proxies in front of Opsview
+  #   # You also need to set Opsview Web to ignore ip: http://docs.opsview.com/doku.php?id=opsview-community:webauthentication
+  #   #TKTAuthIgnoreIP on
+  #   require valid-user
+  #</Location>
+  # Alternatively use Basic auth. Point to Nagios' htpasswd file
+  #<Location /nagvis>
+  #   Order allow,deny
+  #   Allow from all
+  #   AuthType Basic
+  #   AuthName "Opsview"
+  #   AuthUserFile /usr/local/nagios/etc/htpasswd.users
+  #   require valid-user
+  #</Location>
+  
+  # Enables websvn for RANCID integration - requires php5
+  #Alias /websvn /opt/opsview/repository
+  #ProxyPass /websvn !
+  # See above section for nagvis to set 'TKTAuthSecret' and other comments
+  #<Location /websvn>
+  #   AuthType None
+  #   TKTAuthLoginURL /login?app=websvn
+  #   TKTAuthTimeout 86400s
+  #   #TKTAuthIgnoreIP on
+  #   require valid-user
+  #</Location>
+  # Alternatively use Basic auth. Point to Nagios' htpasswd file
+  #<Location /websvn>
+  #   AuthType Basic
+  #   AuthName "Opsview"
+  #   AuthUserFile /usr/local/nagios/etc/htpasswd.users
+  #   require valid-user
+  #</Location>
+  
+  
+  # Provide a 'better' error handler page - if an error occurs and
+  #      /usr/local/nagios/etc/maintenance
+  # exists, will use the contents of that file
+  <Directory /usr/local/nagios/share/error_pages/>
+    Options ExecCGI
+    AddHandler cgi-script .cgi
+  </Directory>
+  ErrorDocument 500 /error_pages/handle_error.cgi?error=500
+  ErrorDocument 501 /error_pages/handle_error.cgi?error=501
+  ErrorDocument 502 /error_pages/handle_error.cgi?error=502
+  ErrorDocument 503 /error_pages/handle_error.cgi?error=503
+  ErrorDocument 504 /error_pages/handle_error.cgi?error=504
+  ErrorDocument 505 /error_pages/handle_error.cgi?error=505
+  
+  # Remove retry=5 for apache < 2.2 as not available in older versions
+  ProxyPass / http://127.0.0.1:3000/ retry=5
+  ProxyPassReverse / http://127.0.0.1:3000/
+  #ProxyPreserveHost On
+</VirtualHost>
