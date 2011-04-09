@@ -20,6 +20,7 @@ if platform?("redhat", "centos", "fedora")
   package "rrdtool-perl"
 end
 
+# FIXME: Use yum package when they officially support RHEL6.
 #package "opsview"
 
 remote_directory "#{Chef::Config[:file_cache_path]}/opsview/rhel6" do
@@ -58,32 +59,19 @@ package "opsview" do
   options "--nogpgcheck" 
 end
 
-
-
-
-
-
-group "nagios" do
-  # Workaround lack of option to enable --system
-  group_name "--system nagios"
-  not_if { Etc.getgrnam("nagios") }
-end
-
+# FIXME: The RPM install should create this required user and group. See if
+# that works when RHEL6 official packages are released.
+group "nagios"
 user "nagios" do
+  shell "/bin/bash"
   system true
   gid "nagios"
   home "/var/log/nagios"
-  manage_home true
-  shell "/bin/bash"
 end
 
 group "nagcmd" do
-  # Workaround lack of option to enable --system
-  group_name "--system nagcmd"
-  not_if { Etc.getgrnam("nagcmd") }
-
   members ["nagios"]
-  append
+  append true
 end
 
 template "/usr/local/nagios/etc/opsview.conf" do
@@ -94,6 +82,7 @@ template "/usr/local/nagios/etc/opsview.conf" do
 end
 
 execute "chown -R nagios:nagios /usr/local/nagios/bin /usr/local/nagios/configs"
+execute "chown -R nagios:nagcmd /tmp/opsview"
 
 gem_package "mysql2"
 
@@ -140,11 +129,16 @@ end
 
 execute "gen_config" do
   command "/usr/local/nagios/bin/rc.opsview gen_config"
-  #not_if "/usr/local/nagios/bin/db_reports db_exists"
+  not_if { File.exists?("/usr/local/nagios/etc/nagios.cfg") }
 end
 
 service "opsview" do
   supports :status => true, :restart => true, :reload => true
+  action [:enable, :start]
+end
+
+service "opsview-agent" do
+  supports :restart => true
   action [:enable, :start]
 end
 

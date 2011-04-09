@@ -65,14 +65,14 @@ Listen 8081
   #   require valid-user
   #</Location>
   # Alternatively use Basic auth. Point to Nagios' htpasswd file
-  #<Location /nagvis>
-  #   Order allow,deny
-  #   Allow from all
-  #   AuthType Basic
-  #   AuthName "Opsview"
-  #   AuthUserFile /usr/local/nagios/etc/htpasswd.users
-  #   require valid-user
-  #</Location>
+  <Location /nagvis>
+    Order allow,deny
+    Allow from all
+    AuthType Basic
+    AuthName "Opsview"
+    AuthUserFile /usr/local/nagios/etc/htpasswd.users
+    require valid-user
+  </Location>
   
   # Enables websvn for RANCID integration - requires php5
   #Alias /websvn /opt/opsview/repository
