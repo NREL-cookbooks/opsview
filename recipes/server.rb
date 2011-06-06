@@ -74,6 +74,13 @@ group "nagcmd" do
   append true
 end
 
+directory node[:opsview][:backup][:dir] do
+  owner "nagios"
+  group "nagcmd"
+  mode "0750"
+  recursive true
+end
+
 template "/usr/local/nagios/etc/opsview.conf" do
   source "opsview.conf.erb"
   owner "nagios"

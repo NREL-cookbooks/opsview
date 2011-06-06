@@ -34,4 +34,9 @@ $reports_dbi = "dbi:mysql";
 $authtkt_shared_secret = "B91D95C2-5BED-11E0-AFC8-EC793A5CDB66";
 
 $nrd_shared_password = "B922A7EC-5BED-11E0-A9E3-ED793A5CDB66";
+
+# Opsview will export database and create tarball of /usr/local/nagios/*
+$backup_dir = "<%= node[:opsview][:backup][:dir] %>";
+$backup_retention_days = <%= node[:opsview][:backup][:retention] %>;
+
 1;

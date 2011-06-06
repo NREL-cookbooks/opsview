@@ -28,3 +28,6 @@ default[:opsview][:db][:reports][:host] = "localhost"
 default[:opsview][:db][:reports][:database] = "reports"
 default[:opsview][:db][:reports][:username] = "reporter"
 set_unless[:opsview][:db][:reports][:password] = secure_password
+
+default[:opsview][:backup][:dir] = "/usr/local/nagios/var/backups"
+default[:opsview][:backup][:retention] = 30
