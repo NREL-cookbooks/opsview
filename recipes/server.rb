@@ -23,40 +23,25 @@ end
 # FIXME: Use yum package when they officially support RHEL6.
 #package "opsview"
 
-remote_directory "#{Chef::Config[:file_cache_path]}/opsview/rhel6" do
-  source "rhel6"
-  files_backup 0
-  recursive true
-end
+rpms = [
+  { :package => "opsview-base", :file => "opsview-base-3.11.3.6091-1.el6.#{node[:kernel][:machine]}.rpm" },
+  { :package => "opsview-perl", :file => "opsview-perl-3.11.3.431-1.el6.#{node[:kernel][:machine]}.rpm" },
+  { :package => "opsview-reports", :file => "opsview-reports-2.2.4.258-1.el6.noarch.rpm" },
+  { :package => "opsview-core", :file => "opsview-core-3.11.3.6091-1.el6.noarch.rpm" },
+  { :package => "opsview-web", :file => "opsview-web-3.11.3.6091-1.el6.noarch.rpm" },
+  { :package => "opsview", :file => "opsview-3.11.3.6091-1.el6.noarch.rpm" },
+]
 
-package "opsview-base" do
-  source "#{Chef::Config[:file_cache_path]}/opsview/rhel6/opsview-base-3.11.2.6057-1.el6.x86_64.rpm"
-  options "--nogpgcheck" 
-end
+rpms.each do |rpm|
+  cookbook_file "#{Chef::Config[:file_cache_path]}/#{rpm[:file]}" do
+    source "rhel6/#{rpm[:file]}"
+    backup false
+  end
 
-package "opsview-perl" do
-  source "#{Chef::Config[:file_cache_path]}/opsview/rhel6/opsview-perl-3.11.2.426-1.el6.x86_64.rpm"
-  options "--nogpgcheck" 
-end
-
-package "opsview-reports" do
-  source "#{Chef::Config[:file_cache_path]}/opsview/rhel6/opsview-reports-2.2.4.258-1.el6.noarch.rpm"
-  options "--nogpgcheck" 
-end
-
-package "opsview-core" do
-  source "#{Chef::Config[:file_cache_path]}/opsview/rhel6/opsview-core-3.11.2.6057-1.el6.noarch.rpm"
-  options "--nogpgcheck" 
-end
-
-package "opsview-web" do
-  source "#{Chef::Config[:file_cache_path]}/opsview/rhel6/opsview-web-3.11.2.6057-1.el6.noarch.rpm"
-  options "--nogpgcheck" 
-end
-
-package "opsview" do
-  source "#{Chef::Config[:file_cache_path]}/opsview/rhel6/opsview-3.11.2.6057-1.el6.noarch.rpm"
-  options "--nogpgcheck" 
+  package rpm[:package] do
+    source "#{Chef::Config[:file_cache_path]}/#{rpm[:file]}"
+    options "--nogpgcheck" 
+  end
 end
 
 # FIXME: The RPM install should create this required user and group. See if
