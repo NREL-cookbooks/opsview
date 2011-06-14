@@ -37,7 +37,7 @@ else
   end
 
   package "opsview-agent" do
-    source "#{Chef::Config[:file_cache_path]}/opsview-agent-3.11.2.6057-1.el6.x86_64.rpm"
+    source "#{Chef::Config[:file_cache_path]}/opsview-agent-3.11.3.6091-1.el6.#{node[:kernel][:machine]}.rpm"
     options "--nogpgcheck" 
   end
 
