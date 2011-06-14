@@ -7,8 +7,11 @@
 # All rights reserved - Do Not Redistribute
 #
 
-gem_package "redis"
-gem_package "SystemTimer"
+rvm_gem "redis"
+
+if(node[:languages][:ruby][:version].to_f < 1.9)
+  rvm_gem "SystemTimer"
+end
 
 nagios_plugin "check_redis" do
   source "nagios_plugins/nagios-check-redis/check_redis"
