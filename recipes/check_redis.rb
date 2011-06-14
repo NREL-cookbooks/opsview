@@ -13,6 +13,6 @@ if(node[:languages][:ruby][:version].to_f < 1.9)
   rvm_gem "SystemTimer"
 end
 
-nagios_plugin "check_redis" do
+nrpe_plugin "check_redis" do
   source "nagios_plugins/nagios-check-redis/check_redis"
 end

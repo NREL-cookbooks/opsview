@@ -11,4 +11,4 @@ include_recipe "python"
 
 package "pymongo"
 
-nagios_plugin "check_mongodb"
+nrpe_plugin "check_mongodb"

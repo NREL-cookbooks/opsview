@@ -7,4 +7,4 @@
 # All rights reserved - Do Not Redistribute
 #
 
-nagios_plugin "check_supervisorctl"
+nrpe_plugin "check_supervisorctl"

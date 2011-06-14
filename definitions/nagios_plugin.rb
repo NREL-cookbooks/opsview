@@ -9,6 +9,29 @@
 
 define :nagios_plugin, :enable => true do
   if params[:enable]
+    cookbook_file "/usr/local/nagios/libexec/#{params[:name]}" do
+      if(params[:source])
+        source params[:source]
+      else
+        source "nagios_plugins/#{params[:name]}"
+      end
+      mode "0755"
+      owner "nagios"
+      group "nagios"
+    end
+  else
+    file "/usr/local/nagios/libexec/#{params[:name]}" do
+      action :delete
+    end
+
+    file "/usr/local/nagios/etc/#{params[:name]}.cfg" do
+      action :delete
+    end
+  end
+end
+
+define :nrpe_plugin, :enable => true do
+  if params[:enable]
     cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
       if(params[:source])
         source params[:source]
@@ -29,6 +52,10 @@ define :nagios_plugin, :enable => true do
       notifies :restart, "service[opsview-agent]"
     end
   else
+    file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+      action :delete
+    end
+
     file "/usr/local/nagios/etc/nrpe_local/#{params[:name]}.cfg" do
       action :delete
     end
