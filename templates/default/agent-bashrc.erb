@@ -1,0 +1,9 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+export OPSVIEW_BASE=/usr/local/nagios
+export PERL5LIB=$OPSVIEW_BASE/perl/lib
