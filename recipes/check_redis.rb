@@ -7,6 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "rvm::install"
+
 rvm_gem "redis"
 
 if(node[:languages][:ruby][:version].to_f < 1.9)

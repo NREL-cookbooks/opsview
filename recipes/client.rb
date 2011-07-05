@@ -27,6 +27,9 @@ else
   # FIXME: Check to see if this is included whenever Opsview officially supports
   # RHEL6.
   if platform?("redhat", "centos", "fedora")
+    include_recipe "yum::epel"
+
+    package "libmcrypt"
     package "openssl098e"
     package "redhat-lsb"
   end
