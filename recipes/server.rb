@@ -8,56 +8,37 @@
 #
 
 include_recipe "mysql::server"
-
-# FIXME: Use opsview repo when they officially support RHEL6.
-#include_recipe "yum::opsview"
+include_recipe "yum::opsview"
 
 # Seems to be a missing dependency, at least under RHEL6.
 #
 # FIXME: Check to see if this is included whenever Opsview officially supports
 # RHEL6.
-if platform?("redhat", "centos", "fedora")
-  package "rrdtool-perl"
-end
+#if platform?("redhat", "centos", "fedora")
+#  package "rrdtool-perl"
+#end
 
-# FIXME: Use yum package when they officially support RHEL6.
-#package "opsview"
-
-rpms = [
-  { :package => "opsview-base", :file => "opsview-base-3.11.3.6091-1.el6.#{node[:kernel][:machine]}.rpm" },
-  { :package => "opsview-perl", :file => "opsview-perl-3.11.3.431-1.el6.#{node[:kernel][:machine]}.rpm" },
-  { :package => "opsview-reports", :file => "opsview-reports-2.2.4.258-1.el6.noarch.rpm" },
-  { :package => "opsview-core", :file => "opsview-core-3.11.3.6091-1.el6.noarch.rpm" },
-  { :package => "opsview-web", :file => "opsview-web-3.11.3.6091-1.el6.noarch.rpm" },
-  { :package => "opsview", :file => "opsview-3.11.3.6091-1.el6.noarch.rpm" },
-]
-
-rpms.each do |rpm|
-  cookbook_file "#{Chef::Config[:file_cache_path]}/#{rpm[:file]}" do
-    source "rhel6/#{rpm[:file]}"
-    backup false
-  end
-
-  package rpm[:package] do
-    source "#{Chef::Config[:file_cache_path]}/#{rpm[:file]}"
-    options "--nogpgcheck" 
-  end
+package "opsview" do
+  action :upgrade
+  notifies :restart, "service[opsview]"
+  notifies :restart, "service[opsview-agent]"
+  notifies :restart, "service[opsview-web]"
 end
 
 # FIXME: The RPM install should create this required user and group. See if
 # that works when RHEL6 official packages are released.
-group "nagios"
-user "nagios" do
-  shell "/bin/bash"
-  system true
-  gid "nagios"
-  home "/var/log/nagios"
-end
-
-group "nagcmd" do
-  members ["nagios"]
-  append true
-end
+#group "nagios"
+#user "nagios" do
+#  shell "/bin/bash"
+#  system true
+#  gid "nagios"
+#  home "/var/log/nagios"
+#end
+#
+#group "nagcmd" do
+#  members ["nagios"]
+#  append true
+#end
 
 directory node[:opsview][:backup][:dir] do
   owner "nagios"
@@ -116,7 +97,6 @@ execute "db_reports" do
     client = Mysql2::Client.new(:host => node[:opsview][:db][:reports][:host], :username => node[:opsview][:db][:reports][:username], :password => node[:opsview][:db][:reports][:password])
     client.query("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '#{node[:opsview][:db][:reports][:database]}' AND table_name = 'schema_version'").first["count"] > 0
   end
-
 end
 
 execute "gen_config" do
