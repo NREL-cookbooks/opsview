@@ -7,6 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "iptables::nrpe"
+include_recipe "yum::epel"
+
 # Only run this recipe if opsview::server isn't enabled (it's RPMS install it's
 # own agent that conflicts with the standalone agent.
 #
@@ -18,16 +21,9 @@ else
   include_recipe "yum::opsview"
 
   # Seems to be a missing dependency, at least under RHEL6.
-  #
-  # FIXME: Check to see if this is included whenever Opsview officially supports
-  # RHEL6.
-  #if platform?("redhat", "centos", "fedora")
-  #  include_recipe "yum::epel"
-  #
-  #  package "libmcrypt"
-  #  package "openssl098e"
-  #  package "redhat-lsb"
-  #end
+  if platform?("redhat", "centos", "fedora")
+    package "redhat-lsb"
+  end
 
   # FIXME: The RPM install should create this required user and group. See if
   # that works when RHEL6 official packages are released.

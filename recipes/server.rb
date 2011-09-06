@@ -8,6 +8,7 @@
 #
 
 include_recipe "mysql::server"
+include_recipe "yum::epel"
 include_recipe "yum::opsview"
 
 # Seems to be a missing dependency, at least under RHEL6.
