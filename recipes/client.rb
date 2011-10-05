@@ -10,6 +10,16 @@
 include_recipe "iptables::nrpe"
 include_recipe "yum::epel"
 
+# Make sure PERL5LIB is setup properly for all users, including the "nagios"
+# user things get executed as via NRPE. Otherwise, perl plugins that get run
+# via NRPE can't find the Nagios::Plugin module.
+template "/etc/profile.d/opsview.sh" do
+  source "profile.erb"
+  mode "0644"
+  owner "root"
+  group "root"
+end
+
 # Only run this recipe if opsview::server isn't enabled (it's RPMS install it's
 # own agent that conflicts with the standalone agent.
 #
@@ -33,27 +43,6 @@ else
   #  system true
   #  gid "nagios"
   #  home "/var/log/nagios"
-  #end
-
-  # FIXME? The Opsview Server RPM seems to properly setup the shell environment
-  # for the opsview agent. However, the actual agent RPM doesn't. We need to
-  # modify the bashrc file so that the PERL5LIB variable gets properly setup.
-  # Otherwise perl plugins that get run via NRPE can't find the Nagios::Plugin
-  # module.
-  #template "/var/log/nagios/.bashrc" do
-  #  source "agent-bashrc.erb"
-  #  owner "nagios"
-  #  group "nagios"
-  #  mode "0644"
-  #  notifies :restart, "service[opsview-agent]"
-  #end
-
-  #template "/var/log/nagios/.bash_profile" do
-  #  source "agent-bash_profile.erb"
-  #  owner "nagios"
-  #  group "nagios"
-  #  mode "0644"
-  #  notifies :restart, "service[opsview-agent]"
   #end
 
   # FIXME: Use yum package when they officially support RHEL6.
