@@ -55,8 +55,8 @@ template "/usr/local/nagios/etc/opsview.conf" do
   mode "0640"
 end
 
-execute "chown -R nagios:nagios /usr/local/nagios/bin /usr/local/nagios/configs"
-execute "chown -R nagios:nagcmd /tmp/opsview"
+execute "chown -f -R nagios:nagios /usr/local/nagios/bin /usr/local/nagios/configs"
+#execute "chown -f -R nagios:nagcmd /tmp/opsview"
 
 gem_package "mysql2"
 
