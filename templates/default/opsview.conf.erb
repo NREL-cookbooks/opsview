@@ -6,37 +6,24 @@
 $dbuser = "<%= node[:opsview][:db][:username] %>";
 $dbpasswd = "<%= node[:opsview][:db][:password] %>";
 $db = "<%= node[:opsview][:db][:database] %>";
-$dbhost = "<%= node[:opsview][:db][:host] %>";
 $dbi = "dbi:mysql";
 
 # DB information for Runtime
 $runtime_dbuser = "<%= node[:opsview][:db][:runtime][:username] %>";
 $runtime_dbpasswd = "<%= node[:opsview][:db][:runtime][:password] %>";
 $runtime_db = "<%= node[:opsview][:db][:runtime][:database] %>";
-$runtime_dbhost = "<%= node[:opsview][:db][:runtime][:host] %>";	
 $runtime_dbi = "dbi:mysql";
-
-# ODW db information for datawarehousing
-$odw_dbuser = "<%= node[:opsview][:db][:odw][:username] %>";
-$odw_dbpasswd = "<%= node[:opsview][:db][:odw][:password] %>";
-$odw_db = "<%= node[:opsview][:db][:odw][:database] %>";
-$odw_dbhost = "<%= node[:opsview][:db][:odw][:host] %>";
-$odw_dbi = "dbi:mysql";
-
-# Reports database
-$reports_dbuser = "<%= node[:opsview][:db][:reports][:username] %>";
-$reports_dbpasswd = "<%= node[:opsview][:db][:reports][:password] %>";
-$reports_db = "<%= node[:opsview][:db][:reports][:database] %>";
-$reports_dbhost = "<%= node[:opsview][:db][:reports][:host] %>";
-$reports_dbi = "dbi:mysql";
-
-# This is the shared secret that the auth ticket system will use for authentication
-$authtkt_shared_secret = "B91D95C2-5BED-11E0-AFC8-EC793A5CDB66";
-
-$nrd_shared_password = "B922A7EC-5BED-11E0-A9E3-ED793A5CDB66";
 
 # Opsview will export database and create tarball of /usr/local/nagios/*
 $backup_dir = "<%= node[:opsview][:backup][:dir] %>";
 $backup_retention_days = <%= node[:opsview][:backup][:retention] %>;
+
+# This is the shared secret that the auth ticket system will use for authentication
+# It should be automatically changed in opsview.conf
+$authtkt_shared_secret = "<%= node[:opsview][:authtkt_shared_secret] %>";
+
+# NRD password
+# Shared key for slaves sending results back via NRD
+$nrd_shared_password = "<%= node[:opsview][:nrd_shared_password] %>";
 
 1;

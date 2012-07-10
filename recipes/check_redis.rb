@@ -7,12 +7,16 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "rvm::install"
+include_recipe "rbenv::global_version"
 
-rvm_gem "redis"
+rbenv_gem "redis" do
+  ruby_version node[:rbenv][:install_global_version]
+end
 
 if(node[:languages][:ruby][:version].to_f < 1.9)
-  rvm_gem "SystemTimer"
+  rbenv_gem "SystemTimer" do
+    ruby_version node[:rbenv][:install_global_version]
+  end
 end
 
 nrpe_plugin "check_redis" do

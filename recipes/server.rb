@@ -26,6 +26,12 @@ package "opsview" do
   notifies :restart, "service[opsview-web]"
 end
 
+file "/etc/httpd/conf.d/02_auth_tkt.conf" do
+  action :delete
+end
+
+apache_module "auth_tkt"
+
 # FIXME: The RPM install should create this required user and group. See if
 # that works when RHEL6 official packages are released.
 #group "nagios"
@@ -68,7 +74,7 @@ execute "db_opsview" do
   command "/usr/local/nagios/bin/db_opsview db_install"
   not_if do
     require "mysql2"
-    client = Mysql2::Client.new(:host => node[:opsview][:db][:host], :username => node[:opsview][:db][:username], :password => node[:opsview][:db][:password])
+    client = Mysql2::Client.new(:host => "localhost", :username => node[:opsview][:db][:username], :password => node[:opsview][:db][:password])
     client.query("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '#{node[:opsview][:db][:database]}' AND table_name = 'schema_version'").first["count"] > 0
   end
 end
@@ -77,26 +83,8 @@ execute "db_runtime" do
   command "/usr/local/nagios/bin/db_runtime db_install"
   not_if do
     require "mysql2"
-    client = Mysql2::Client.new(:host => node[:opsview][:db][:runtime][:host], :username => node[:opsview][:db][:runtime][:username], :password => node[:opsview][:db][:runtime][:password])
+    client = Mysql2::Client.new(:host => "localhost", :username => node[:opsview][:db][:runtime][:username], :password => node[:opsview][:db][:runtime][:password])
     client.query("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '#{node[:opsview][:db][:runtime][:database]}' AND table_name = 'schema_version'").first["count"] > 0
-  end
-end
-
-execute "db_odw" do
-  command "/usr/local/nagios/bin/db_odw db_install"
-  not_if do
-    require "mysql2"
-    client = Mysql2::Client.new(:host => node[:opsview][:db][:odw][:host], :username => node[:opsview][:db][:odw][:username], :password => node[:opsview][:db][:odw][:password])
-    client.query("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '#{node[:opsview][:db][:odw][:database]}' AND table_name = 'schema_version'").first["count"] > 0
-  end
-end
-
-execute "db_reports" do
-  command "/usr/local/nagios/bin/db_reports db_install"
-  not_if do
-    require "mysql2"
-    client = Mysql2::Client.new(:host => node[:opsview][:db][:reports][:host], :username => node[:opsview][:db][:reports][:username], :password => node[:opsview][:db][:reports][:password])
-    client.query("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '#{node[:opsview][:db][:reports][:database]}' AND table_name = 'schema_version'").first["count"] > 0
   end
 end
 
