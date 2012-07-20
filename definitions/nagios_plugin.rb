@@ -45,7 +45,10 @@ define :nrpe_plugin, :enable => true do
 
     template "/usr/local/nagios/etc/nrpe_local/#{params[:name]}.cfg" do
       source "nrpe_nagios_plugin.cfg.erb"
-      variables :name => params[:name]
+      variables({
+        :name => params[:name],
+        :env => if(params[:env]) then "env #{params[:env]} " else "" end,
+      })
       mode "0440"
       owner "nagios"
       group "nagios"
