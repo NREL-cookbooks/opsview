@@ -7,4 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
+package "wget"
 nrpe_plugin "check_nginx"
+
+include_recipe "python"
+nrpe_plugin "check_nginx_conn"
