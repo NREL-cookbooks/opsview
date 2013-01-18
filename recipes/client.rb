@@ -30,22 +30,6 @@ if(node[:recipes].include?("opsview::server") || node.recipe?("opsview::server")
 else
   include_recipe "yum::opsview"
 
-  # Seems to be a missing dependency, at least under RHEL6.
-  if platform?("redhat", "centos", "fedora")
-    package "redhat-lsb"
-  end
-
-  # FIXME: The RPM install should create this required user and group. See if
-  # that works when RHEL6 official packages are released.
-  #group "nagios"
-  #user "nagios" do
-  #  shell "/bin/bash"
-  #  system true
-  #  gid "nagios"
-  #  home "/var/log/nagios"
-  #end
-
-  # FIXME: Use yum package when they officially support RHEL6.
   package "opsview-agent" do
     action :upgrade
     notifies :restart, "service[opsview-agent]"

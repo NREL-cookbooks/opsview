@@ -11,14 +11,6 @@ include_recipe "mysql::server"
 include_recipe "yum::epel"
 include_recipe "yum::opsview"
 
-# Seems to be a missing dependency, at least under RHEL6.
-#
-# FIXME: Check to see if this is included whenever Opsview officially supports
-# RHEL6.
-#if platform?("redhat", "centos", "fedora")
-#  package "rrdtool-perl"
-#end
-
 package "opsview" do
   action :upgrade
   notifies :restart, "service[opsview]"
@@ -31,21 +23,6 @@ file "/etc/httpd/conf.d/02_auth_tkt.conf" do
 end
 
 apache_module "auth_tkt"
-
-# FIXME: The RPM install should create this required user and group. See if
-# that works when RHEL6 official packages are released.
-#group "nagios"
-#user "nagios" do
-#  shell "/bin/bash"
-#  system true
-#  gid "nagios"
-#  home "/var/log/nagios"
-#end
-#
-#group "nagcmd" do
-#  members ["nagios"]
-#  append true
-#end
 
 directory node[:opsview][:backup][:dir] do
   owner "nagios"
@@ -62,7 +39,6 @@ template "/usr/local/nagios/etc/opsview.conf" do
 end
 
 execute "chown -f -R nagios:nagios /usr/local/nagios/bin /usr/local/nagios/configs"
-#execute "chown -f -R nagios:nagcmd /tmp/opsview"
 
 gem_package "mysql2"
 
