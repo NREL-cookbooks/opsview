@@ -40,7 +40,7 @@ end
 
 execute "chown -f -R nagios:nagios /usr/local/nagios/bin /usr/local/nagios/configs"
 
-gem_package "mysql2"
+chef_gem "mysql2"
 
 execute "db_mysql" do
   command "/usr/local/nagios/bin/db_mysql -u root -p '#{node[:mysql][:server_root_password]}'"
