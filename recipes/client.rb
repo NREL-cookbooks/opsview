@@ -22,10 +22,7 @@ end
 
 # Only run this recipe if opsview::server isn't enabled (it's RPMS install it's
 # own agent that conflicts with the standalone agent.
-#
-# Check for the opsview::server recipe in both the expanded recipe list and the
-# seen recipes list.
-if(node[:recipes].include?("opsview::server") || node.recipe?("opsview::server") )
+if(node.recipe?("opsview::server") )
   Chef::Log.info("Skipping opsview::client recipe because conflicting opsview::server recipe is enabled")
 else
   include_recipe "yum::opsview"
