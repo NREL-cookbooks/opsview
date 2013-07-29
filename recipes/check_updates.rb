@@ -16,6 +16,7 @@ include_recipe "yum::epel"
 package "perl-Readonly"
 package "perl-Sort-Versions"
 
+# http://exchange.nagios.org/directory/Plugins/Operating-Systems/Linux/check_updates/details
 remote_file "#{Chef::Config[:file_cache_path]}/check_updates-#{node[:opsview][:check_updates][:version]}.tar.gz" do
   source "https://trac.id.ethz.ch/projects/nagios_plugins/downloads/check_updates-#{node[:opsview][:check_updates][:version]}.tar.gz"
   checksum node[:opsview][:check_updates][:archive_checksum]

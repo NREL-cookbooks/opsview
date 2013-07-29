@@ -12,4 +12,6 @@ include_recipe "opsview::client"
 package "sysstat"
 package "bc"
 
+# http://exchange.nagios.org/directory/Plugins/Operating-Systems/Linux/check_iostat--2D-I-2FO-statistics/details
+# Locally patched with patch from comments.
 nrpe_plugin "check_iostat"

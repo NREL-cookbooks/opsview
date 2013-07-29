@@ -7,17 +7,27 @@
 # All rights reserved - Do Not Redistribute
 #
 
-define :nagios_plugin, :enable => true do
+define :nagios_plugin, :enable => true, :remote_file => false do
   if params[:enable]
-    cookbook_file "/usr/local/nagios/libexec/#{params[:name]}" do
-      if(params[:source])
+    if params[:remote_file]
+      remote_file "/usr/local/nagios/libexec/#{params[:name]}" do
         source params[:source]
-      else
-        source "nagios_plugins/#{params[:name]}"
+        checksum params[:checksum]
+        mode "0755"
+        owner "nagios"
+        group "nagios"
       end
-      mode "0755"
-      owner "nagios"
-      group "nagios"
+    else
+      cookbook_file "/usr/local/nagios/libexec/#{params[:name]}" do
+        if(params[:source])
+          source params[:source]
+        else
+          source "nagios_plugins/#{params[:name]}"
+        end
+        mode "0755"
+        owner "nagios"
+        group "nagios"
+      end
     end
   else
     file "/usr/local/nagios/libexec/#{params[:name]}" do
@@ -30,9 +40,17 @@ define :nagios_plugin, :enable => true do
   end
 end
 
-define :nrpe_plugin, :enable => true, :cookbook_file => true do
+define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => false do
   if params[:enable]
-    if params[:cookbook_file]
+    if params[:remote_file]
+      remote_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+        source params[:source]
+        checksum params[:checksum]
+        mode "0755"
+        owner "nagios"
+        group "nagios"
+      end
+    elsif params[:cookbook_file]
       cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
         if(params[:source])
           source params[:source]
