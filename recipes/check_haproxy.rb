@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "opsview::client"
 include_recipe "perl"
 
 if platform?("redhat", "centos", "fedora")

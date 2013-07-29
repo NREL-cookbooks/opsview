@@ -7,6 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "opsview::client"
+
 package "wget"
 nrpe_plugin "check_nginx"
 

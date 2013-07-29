@@ -7,4 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "opsview::client"
+
 nrpe_plugin "check_net_stat"

@@ -7,6 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "opsview::client"
+
 package "perl-Time-HiRes"
 
 nrpe_plugin "check_phpfpm_status" do
