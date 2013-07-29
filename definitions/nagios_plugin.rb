@@ -30,23 +30,32 @@ define :nagios_plugin, :enable => true do
   end
 end
 
-define :nrpe_plugin, :enable => true do
+define :nrpe_plugin, :enable => true, :cookbook_file => true do
   if params[:enable]
-    cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
-      if(params[:source])
-        source params[:source]
-      else
-        source "nagios_plugins/#{params[:name]}"
+    if params[:cookbook_file]
+      cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+        if(params[:source])
+          source params[:source]
+        else
+          source "nagios_plugins/#{params[:name]}"
+        end
+        mode "0755"
+        owner "nagios"
+        group "nagios"
       end
-      mode "0755"
-      owner "nagios"
-      group "nagios"
+    else
+      file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+        mode "0755"
+        owner "nagios"
+        group "nagios"
+      end
     end
 
     template "/usr/local/nagios/etc/nrpe_local/#{params[:name]}.cfg" do
       source "nrpe_nagios_plugin.cfg.erb"
       variables({
         :name => params[:name],
+        :sudo => if(params[:sudo]) then "sudo " else "" end,
         :env => if(params[:env]) then "env #{params[:env]} " else "" end,
       })
       mode "0440"

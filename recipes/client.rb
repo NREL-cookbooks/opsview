@@ -20,6 +20,8 @@ template "/etc/profile.d/opsview.sh" do
   group "root"
 end
 
+ENV["PERL5LIB"] = "/usr/local/nagios/perl/lib:#{ENV["PERL5LIB"]}"
+
 # Only run this recipe if opsview::server isn't enabled (it's RPMS install it's
 # own agent that conflicts with the standalone agent.
 if(node.recipe?("opsview::server") )

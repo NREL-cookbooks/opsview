@@ -1,1 +1,1 @@
-command[<%= @name %>]=<%= @env %>/usr/local/nagios/libexec/nrpe_local/<%= @name %> $ARG1$
+command[<%= @name %>]=<%= @env %><%= @sudo %>/usr/local/nagios/libexec/nrpe_local/<%= @name %> $ARG1$
