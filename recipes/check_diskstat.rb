@@ -16,9 +16,10 @@ nrpe_plugin "check_diskstat" do
   checksum "b2d917c17dc8d3911042463342e21faecc870fb2325530ff2f99afff201ec6c5"
 end
 
-# Symlink for check_all_diskstat to find check_diskstat.
+# check_all_diskstat expects to find check_diskstat at this location, so
+# symlink it into place.
 link "/usr/local/nagios/libexec/check_diskstat.sh" do
-  to "/usr/local/nagios/libexec/check_diskstat"
+  to "/usr/local/nagios/libexec/nrpe_local/check_diskstat"
 end
 
 nrpe_plugin "check_all_diskstat" do
