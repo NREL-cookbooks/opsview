@@ -41,9 +41,11 @@ define :nagios_plugin, :enable => true, :remote_file => false do
 end
 
 define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => false do
+  script_filename = params[:script_filename] || params[:name]
+
   if params[:enable]
     if params[:remote_file]
-      remote_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+      remote_file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
         source params[:source]
         checksum params[:checksum]
         mode "0755"
@@ -51,7 +53,7 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
         group "nagios"
       end
     elsif params[:cookbook_file]
-      cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+      cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
         if(params[:source])
           source params[:source]
         else
@@ -62,7 +64,7 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
         group "nagios"
       end
     else
-      file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+      file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
         mode "0755"
         owner "nagios"
         group "nagios"
@@ -73,6 +75,7 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
       source "nrpe_nagios_plugin.cfg.erb"
       variables({
         :name => params[:name],
+        :script_filename => script_filename,
         :sudo => if(params[:sudo]) then "sudo " else "" end,
         :env => if(params[:env]) then "env #{params[:env]} " else "" end,
       })
@@ -82,7 +85,7 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
       notifies :restart, "service[opsview-agent]"
     end
   else
-    file "/usr/local/nagios/libexec/nrpe_local/#{params[:name]}" do
+    file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
       action :delete
     end
 
