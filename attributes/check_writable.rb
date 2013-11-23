@@ -1,2 +1,2 @@
 default[:opsview][:check_writable][:version] = "2.0.1"
-default[:opsview][:check_writable][:archive_checksum] = "fe7c434f9d3b944d30ad41d91c467b6561a06e5c542e4a16610d963b967ae350"
+default[:opsview][:check_writable][:archive_checksum] = "47e86fb04c0e89a0daf47ca36adf47d102f62ae30a74b7fc2e2df5ae9c15f061"
