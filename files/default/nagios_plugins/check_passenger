@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+require "optparse"
+
+options = {}
+optparser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options]"
+  opts.on('-w', '--warn PROCESSES', 'Warn queued processes') { |o| options[:warn] = o.to_i if o }
+  opts.on('-c', '--critical PROCESSES', 'Critical queued processes') {|o| options[:critical] = o.to_i if o }
+  opts.on('-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+optparser.parse!
+
+status = `passenger-status`
+max = status.match(/^(max).*[=:]\s*(\d+)/i)[2].to_i
+processes = status.match(/^(count|processes).*[=:]\s*(\d+)/i)[2].to_i
+queued = status.match(/(top-level|global) queue.*[=:]\s*(\d+)/i)[2].to_i
+
+message = "Max pool size: #{max}, Processes: #{processes}, Requests in top-level queue: #{queued}"
+perf = "'max'=#{max}; 'processes'=#{processes}; 'queued'=#{queued};"
+
+if(options[:critical] && queued >= options[:critical])
+  puts "CRITICAL - #{message} | #{perf}"
+  exit 2
+elsif(options[:warn] && queued >= options[:warn])
+  puts "WARNING - #{message} | #{perf}"
+  exit 1
+else
+  puts "OK - #{message} | #{perf}"
+  exit 0
+end
