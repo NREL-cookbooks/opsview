@@ -18,5 +18,5 @@ end
 
 nrpe_plugin "check_redis" do
   source "nagios_plugins/nagios-check-redis/check_redis"
-  env "env PATH=#{node[:rbenv][:root_path]}/shims:#{node[:rbenv][:root_path]}/bin:$PATH "
+  env "PATH=#{node[:rbenv][:root_path]}/shims:#{node[:rbenv][:root_path]}/bin:$PATH"
 end
