@@ -21,7 +21,7 @@ processes = status.match(/^(count|processes).*[=:]\s*(\d+)/i)[2].to_i
 queued = status.match(/(top-level|global) queue.*[=:]\s*(\d+)/i)[2].to_i
 
 message = "Max pool size: #{max}, Processes: #{processes}, Requests in top-level queue: #{queued}"
-perf = "'max'=#{max}; 'processes'=#{processes}; 'queued'=#{queued};"
+perf = "'max'=#{max} 'processes'=#{processes} 'queued'=#{queued}"
 
 if(options[:critical] && queued >= options[:critical])
   puts "CRITICAL - #{message} | #{perf}"
