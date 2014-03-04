@@ -11,7 +11,7 @@ include_recipe "build-essential"
 include_recipe "opsview::client"
 include_recipe "opsview::nrpe_sudo"
 include_recipe "perl"
-include_recipe "yum::epel"
+include_recipe "yum-epel"
 
 package "perl-Readonly"
 package "perl-Sort-Versions"
