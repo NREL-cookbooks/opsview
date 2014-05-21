@@ -12,6 +12,15 @@ include_recipe "opsview::client"
 # https://github.com/bucardo/check_postgres
 nrpe_plugin "check_postgres" do
   remote_file true
-  source "https://raw.github.com/bucardo/check_postgres/5f7e574ae0a23022bd893636c655305b60e9cd55/check_postgres.pl"
-  checksum "661ab885d28452d35e4d41a5f11f703300f47a085f842f0cd3fb16591ff9f0ae"
+  source "https://github.com/bucardo/check_postgres/raw/2.21.0/check_postgres.pl"
+  checksum "6693aed935835e7eaeab0a96fe810f04e15096026110d942f37a0ecbb2504df7"
+end
+
+node[:opsview][:check_postgres][:connections].each do |connection|
+  postgresql_database_user("nagios") do
+    connection(connection)
+    # Setup the nagios user as a password-less local-only user account. This
+    # means things have to go through nrpe.
+    password nil
+  end
 end
