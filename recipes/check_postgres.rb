@@ -8,6 +8,7 @@
 #
 
 include_recipe "opsview::client"
+include_recipe "database::postgresql"
 
 # https://github.com/bucardo/check_postgres
 nrpe_plugin "check_postgres" do

@@ -7,6 +7,7 @@ version          "0.0.7"
 
 depends "acl"
 depends "apache2"
+depends "database"
 depends "iptables"
 depends "mysql"
 depends "openssl"
