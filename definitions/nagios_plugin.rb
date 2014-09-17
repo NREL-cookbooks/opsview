@@ -8,17 +8,19 @@
 #
 
 define :nagios_plugin, :enable => true, :remote_file => false do
+  script_filename = params[:script_filename] || params[:name]
+
   if params[:enable]
     if params[:remote_file]
-      remote_file "/usr/local/nagios/libexec/#{params[:name]}" do
+      remote_file "/usr/local/nagios/libexec/#{script_filename}" do
         source params[:source]
         checksum params[:checksum]
         mode "0755"
         owner "nagios"
         group "nagios"
       end
-    else
-      cookbook_file "/usr/local/nagios/libexec/#{params[:name]}" do
+    elsif params[:cookbook_file]
+      cookbook_file "/usr/local/nagios/libexec/#{script_filename}" do
         if(params[:source])
           source params[:source]
         else
@@ -28,9 +30,15 @@ define :nagios_plugin, :enable => true, :remote_file => false do
         owner "nagios"
         group "nagios"
       end
+    else
+      file "/usr/local/nagios/libexec/#{script_filename}" do
+        mode "0755"
+        owner "nagios"
+        group "nagios"
+      end
     end
   else
-    file "/usr/local/nagios/libexec/#{params[:name]}" do
+    file "/usr/local/nagios/libexec/#{script_filename}" do
       action :delete
     end
 

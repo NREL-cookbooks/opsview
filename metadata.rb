@@ -1,3 +1,4 @@
+name             "opsview"
 maintainer       "NREL"
 maintainer_email "nick.muerdter@nrel.gov"
 license          "All rights reserved"
@@ -7,6 +8,7 @@ version          "0.0.7"
 
 depends "acl"
 depends "apache2"
+depends "database"
 depends "iptables"
 depends "mysql"
 depends "openssl"
