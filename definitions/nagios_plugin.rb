@@ -50,10 +50,11 @@ end
 
 define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => false do
   script_filename = params[:script_filename] || params[:name]
+  script_path = params[:script_path] || "/usr/local/nagios/libexec/nrpe_local/#{script_filename}"
 
   if params[:enable]
     if params[:remote_file]
-      remote_file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
+      remote_file(script_path) do
         source params[:source]
         checksum params[:checksum]
         mode "0755"
@@ -61,7 +62,7 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
         group "nagios"
       end
     elsif params[:cookbook_file]
-      cookbook_file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
+      cookbook_file(script_path) do
         if(params[:source])
           source params[:source]
         else
@@ -72,10 +73,12 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
         group "nagios"
       end
     else
-      file "/usr/local/nagios/libexec/nrpe_local/#{script_filename}" do
-        mode "0755"
-        owner "nagios"
-        group "nagios"
+      unless params[:script_path]
+        file(script_path) do
+          mode "0755"
+          owner "nagios"
+          group "nagios"
+        end
       end
     end
 
@@ -83,7 +86,7 @@ define :nrpe_plugin, :enable => true, :cookbook_file => true, :remote_file => fa
       source "nrpe_nagios_plugin.cfg.erb"
       variables({
         :name => params[:name],
-        :script_filename => script_filename,
+        :script_path => script_path,
         :sudo => if(params[:sudo]) then "sudo " else "" end,
         :env => if(params[:env]) then "env #{params[:env]} " else "" end,
       })
