@@ -10,11 +10,15 @@
 include_recipe "opsview::client"
 include_recipe "python"
 
-# https://code.google.com/p/check-yum/
+# https://github.com/opinkerfi/nagios-plugins/blob/master/check_yum/check_yum
+# Fork of: https://code.google.com/p/check-yum/
+# This fork includes a couple handy features:
+# - "long-output" option to show the packages with security issues.
+# - Performance output to track number of security updates over time.
 nrpe_plugin "check_yum" do
   remote_file true
-  source "https://check-yum.googlecode.com/git-history/d5aed5e81ea8e1ff116da12e38c543a57aacfa6d/check_yum"
-  checksum "6f1b7922ce766ec8823eedfa3c132e88741e5121c6031590b46e5e85eb798556"
+  source "https://raw.githubusercontent.com/opinkerfi/nagios-plugins/944d47e18e5b03d514a5e3a56495b7817d424b97/check_yum/check_yum"
+  checksum "f87ed2321adedae350b5c4dc4f77127963d694e6ac29b639b43e8f5a86f99d86"
   sudo true
 end
 
