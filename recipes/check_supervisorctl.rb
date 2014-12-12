@@ -12,6 +12,18 @@ include_recipe "opsview::client"
 # https://github.com/stevelippert/check_supervisorctl
 nrpe_plugin "check_supervisorctl" do
   remote_file true
-  source "https://raw.github.com/stevelippert/check_supervisorctl/13eb322534118cf945d8b6b0ffbd205500b3a17a/check_supervisorctl.sh"
-  checksum "2e4c0693553bab4bf63df22b0d56ed57b9d601273f1132fd3e21debae3552cc2"
+  source "https://raw.githubusercontent.com/GUI/check_supervisorctl/2f8e5ac587fed0e4d9413482d5cee0c5a4e6db49/check_supervisorctl.sh"
+  checksum "98092a526d813ffb35ab2f5fb7bd31245ee98448d084e05f4a2a71299d2d738b"
+  sudo true
+end
+
+sudo "nagios_check_supervisorctl" do
+  user "nagios"
+
+  commands [
+    "/usr/local/nagios/libexec/nrpe_local/check_supervisorctl",
+  ]
+
+  host "ALL"
+  nopasswd true
 end
