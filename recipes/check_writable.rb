@@ -10,6 +10,8 @@
 include_recipe "opsview::client"
 include_recipe "perl::data_random"
 
+package "perl-ExtUtils-MakeMaker"
+
 # http://exchange.nagios.org/directory/Plugins/Operating-Systems/Linux/check_writable/details
 remote_file "#{Chef::Config[:file_cache_path]}/check_writable-#{node[:opsview][:check_writable][:version]}.tar.gz" do
   source "https://trac.id.ethz.ch/projects/nagios_plugins/downloads/check_writable-#{node[:opsview][:check_writable][:version]}.tar.gz"
