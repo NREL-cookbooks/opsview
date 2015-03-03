@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 require "optparse"
+require 'rexml/document'
+include REXML
 
 options = {}
 optparser = OptionParser.new do |opts|
@@ -15,18 +17,43 @@ end
 
 optparser.parse!
 
-status = `passenger-status`
-max = status.match(/^(max).*[=:]\s*(\d+)/i)[2].to_i
-processes = status.match(/^(count|processes).*[=:]\s*(\d+)/i)[2].to_i
-queued = status.match(/(top-level|global) queue.*[=:]\s*(\d+)/i)[2].to_i
+status = `passenger-status --show=xml`
+xmldoc = Document.new(status)
+
+max = XPath.first(xmldoc, '/info/max').text.to_i
+processes = XPath.first(xmldoc, '/info/process_count')
+if processes.nil?
+  processes = XPath.first(xmldoc, '/info/count')
+end
+processes = processes.text.to_i
+queued = XPath.first(xmldoc, '/info/get_wait_list_size')
+if queued.nil?
+  queued = XPath.first(xmldoc, '/info/global_queue_size')
+end
+queued = queued.text.to_i
 
 message = "Max pool size: #{max}, Processes: #{processes}, Requests in top-level queue: #{queued}"
 perf = "'max'=#{max} 'processes'=#{processes} 'queued'=#{queued}"
 
-if(options[:critical] && queued >= options[:critical])
+sub_queue_critical = false
+sub_queue_warn = false
+
+XPath.each(xmldoc, '//supergroup') do |sg|
+  name = sg.get_elements("name").first.text
+  queue = sg.get_elements("get_wait_list_size").first.text.to_i
+  perf += " '#{name} queue'=#{queue}"
+  if(options[:critical] && queue >= options[:critical])
+    sub_queue_critical = true
+  elsif(options[:warn] && queue >= options[:warn])
+    sub_queue_warn = true
+  end
+end
+
+
+if(options[:critical] && (queued >= options[:critical] || sub_queue_critical))
   puts "CRITICAL - #{message} | #{perf}"
   exit 2
-elsif(options[:warn] && queued >= options[:warn])
+elsif(options[:warn] && (queued >= options[:warn] || sub_queue_warn))
   puts "WARNING - #{message} | #{perf}"
   exit 1
 else
