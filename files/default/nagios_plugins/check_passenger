@@ -38,7 +38,7 @@ perf = "'max'=#{max} 'processes'=#{processes} 'queued'=#{queued}"
 sub_queue_critical = false
 sub_queue_warn = false
 
-XPath.each(xmldoc, '//supergroup') do |sg|
+XPath.each(xmldoc, '//group') do |sg|
   name = sg.get_elements("name").first.text
   queue = sg.get_elements("get_wait_list_size").first.text.to_i
   perf += " '#{name} queue'=#{queue}"
