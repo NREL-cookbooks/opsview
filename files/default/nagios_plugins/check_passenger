@@ -33,6 +33,12 @@ end
 queued = queued.text.to_i
 
 message = "Max pool size: #{max}, Processes: #{processes}, Requests in top-level queue: #{queued}"
+if(options[:critical])
+  message += " critical on #{options[:critical]}"
+end
+if(options[:warn])
+  message += " warn on #{options[:warn]}"
+end
 perf = "'max'=#{max} 'processes'=#{processes} 'queued'=#{queued}"
 
 sub_queue_critical = false
@@ -50,10 +56,10 @@ XPath.each(xmldoc, '//group') do |sg|
 end
 
 
-if(options[:critical] && (queued >= options[:critical] || sub_queue_critical))
+if(options[:critical] && ((queued >= options[:critical]) || sub_queue_critical))
   puts "CRITICAL - #{message} | #{perf}"
   exit 2
-elsif(options[:warn] && (queued >= options[:warn] || sub_queue_warn))
+elsif(options[:warn] && ((queued >= options[:warn]) || sub_queue_warn))
   puts "WARNING - #{message} | #{perf}"
   exit 1
 else
