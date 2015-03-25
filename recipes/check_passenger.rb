@@ -22,5 +22,4 @@ end
 
 nrpe_plugin "check_passenger" do
   sudo true
-  env "PATH=#{node[:rbenv][:root_path]}/shims:#{node[:rbenv][:root_path]}/bin:$PATH"
 end
