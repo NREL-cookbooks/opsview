@@ -16,7 +16,6 @@ package "perl-Time-HiRes"
 nrpe_plugin "check_ro_mounts" do
   remote_file true
   source "http://exchange.nagios.org/components/com_mtree/attachment.php?link_id=3448&cf_id=24"
-          https://exchange.nagios.org/components/com_mtree/attachment.php?link_id=3448&cf_id=24
 
   checksum "4b5d10a2ac1b8f46a57b99c3644233c6e3242bb27010f77c61c0a0bc269c834d"
 end
