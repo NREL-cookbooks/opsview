@@ -1,2 +1,2 @@
-default[:opsview][:check_updates][:version] = "1.6.5"
-default[:opsview][:check_updates][:archive_checksum] = "fe7c434f9d3b944d30ad41d91c467b6561a06e5c542e4a16610d963b967ae350"
+default[:opsview][:check_updates][:version] = "1.6.15"
+default[:opsview][:check_updates][:archive_checksum] = "1063265ec666566288c4fbc63d651589fa5506d5c12affe1551f238d5313d770"

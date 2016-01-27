@@ -12,7 +12,7 @@ include_recipe "perl"
 
 # http://exchange.nagios.org/directory/Plugins/Network-Protocols/HTTP/check_ssl_cert/details
 remote_file "#{Chef::Config[:file_cache_path]}/check_ssl_cert-#{node[:opsview][:check_ssl_cert][:version]}.tar.gz" do
-  source "https://trac.id.ethz.ch/projects/nagios_plugins/downloads/check_ssl_cert-#{node[:opsview][:check_ssl_cert][:version]}.tar.gz"
+  source "https://github.com/matteocorti/check_ssl_cert/archive/v#{node[:opsview][:check_ssl_cert][:version]}.tar.gz"
   checksum node[:opsview][:check_ssl_cert][:archive_checksum]
 end
 
