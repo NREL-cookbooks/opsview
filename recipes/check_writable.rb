@@ -12,7 +12,7 @@ include_recipe "perl"
 include_recipe "perl::data_random"
 
 package "perl-ExtUtils-MakeMaker"
-package "perl-Module-Install"
+cpan_module "Module::Install"
 
 # http://exchange.nagios.org/directory/Plugins/Operating-Systems/Linux/check_writable/details
 remote_file "#{Chef::Config[:file_cache_path]}/check_writable-#{node[:opsview][:check_writable][:version]}.tar.gz" do

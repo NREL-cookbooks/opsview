@@ -13,7 +13,7 @@ include_recipe "opsview::nrpe_sudo"
 include_recipe "perl"
 include_recipe "yum::epel"
 
-package "perl-Module-Install"
+cpan_module "Module::Install"
 package "perl-Readonly"
 package "perl-Sort-Versions"
 
