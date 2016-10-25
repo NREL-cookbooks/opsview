@@ -7,7 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "iptables::nrpe"
 include_recipe "yum::epel"
 
 # Make sure PERL5LIB is setup properly for all users, including the "nagios"
