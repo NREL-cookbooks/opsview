@@ -4,7 +4,7 @@ maintainer_email "nick.muerdter@nrel.gov"
 license          "All rights reserved"
 description      "Installs/Configures opsview"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version          "0.0.7"
+version          "0.1.0"
 
 depends "acl"
 depends "apache2"
@@ -17,3 +17,4 @@ depends "python"
 depends "rbenv"
 depends "sudo"
 depends "yum"
+depends "yum-epel"

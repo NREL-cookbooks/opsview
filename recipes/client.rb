@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "yum::epel"
+include_recipe "yum-epel"
 
 # Make sure PERL5LIB is setup properly for all users, including the "nagios"
 # user things get executed as via NRPE. Otherwise, perl plugins that get run
@@ -26,7 +26,7 @@ ENV["PERL5LIB"] = "/usr/local/nagios/perl/lib:#{ENV["PERL5LIB"]}"
 if(node.recipe?("opsview::server") )
   Chef::Log.info("Skipping opsview::client recipe because conflicting opsview::server recipe is enabled")
 else
-  include_recipe "yum::opsview"
+  include_recipe "opsview::yum_repo"
 
   package "opsview-agent" do
     action :upgrade

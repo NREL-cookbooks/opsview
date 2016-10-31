@@ -8,8 +8,8 @@
 #
 
 include_recipe "mysql::server"
-include_recipe "yum::epel"
-include_recipe "yum::opsview"
+include_recipe "yum-epel"
+include_recipe "opsview::yum_repo"
 
 package "opsview" do
   action :upgrade

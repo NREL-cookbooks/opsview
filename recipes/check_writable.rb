@@ -9,9 +9,9 @@
 
 include_recipe "opsview::client"
 include_recipe "perl"
-include_recipe "perl::data_random"
 
 package "perl-ExtUtils-MakeMaker"
+cpan_module "Data::Random"
 cpan_module "Module::Install"
 
 # http://exchange.nagios.org/directory/Plugins/Operating-Systems/Linux/check_writable/details
