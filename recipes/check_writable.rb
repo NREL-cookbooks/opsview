@@ -9,10 +9,18 @@
 
 include_recipe "opsview::client"
 include_recipe "perl"
+include_recipe "yum-epel"
 
 package "perl-ExtUtils-MakeMaker"
+package "perl-Monitoring-Plugin"
 cpan_module "Data::Random"
-cpan_module "Module::Install"
+cpan_module "Module::Install" do
+  # cpan_module's default check to see if the module is installed doesn't
+  # properly detect this module, since it requires the module be included via
+  # "inc::Module::Install" instead of "Module::Install". So do a simple
+  # file-based check instead to prevent repeated installs.
+  not_if { ::File.exist?("/usr/local/share/perl5/Module/Install.pm") }
+end
 
 # http://exchange.nagios.org/directory/Plugins/Operating-Systems/Linux/check_writable/details
 remote_file "#{Chef::Config[:file_cache_path]}/check_writable-#{node[:opsview][:check_writable][:version]}.tar.gz" do
