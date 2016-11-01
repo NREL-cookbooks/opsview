@@ -12,6 +12,6 @@ include_recipe "opsview::client"
 # https://github.com/onnozweers/Nagios-plugins
 nrpe_plugin "check_kernel" do
   remote_file true
-  source "https://raw.githubusercontent.com/GUI/Nagios-plugins/8cac3c1dbb7a4241d491234d64b074aad7a1ea85/check_kernel"
-  checksum "b11cda56f2e15ec465b7869f3ff93543d3e92959d88bbc25d219209f47914a23"
+  source "https://raw.githubusercontent.com/onnozweers/Nagios-plugins/d875419d1b2775ec50a2f4b1a765598b6dcc3291/check_kernel"
+  checksum "a028b41c9d2213d603ceefe870d5e316308811ceac2be32f7b2dc24d840bdaf7"
 end
