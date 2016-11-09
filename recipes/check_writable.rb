@@ -9,7 +9,7 @@
 
 include_recipe "opsview::client"
 include_recipe "perl"
-include_recipe "yum-epel"
+include_recipe "yum::epel"
 
 package "perl-ExtUtils-MakeMaker"
 package "perl-Monitoring-Plugin"

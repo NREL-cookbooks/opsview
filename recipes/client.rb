@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "yum-epel"
+include_recipe "yum::epel"
 
 # Make sure PERL5LIB is setup properly for all users, including the "nagios"
 # user things get executed as via NRPE. Otherwise, perl plugins that get run
