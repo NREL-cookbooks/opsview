@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "build-essential"
 include_recipe "opsview::client"
 include_recipe "perl"
 include_recipe "yum-epel"
