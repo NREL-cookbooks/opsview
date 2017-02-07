@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -u
+
+exit_ok=0
+exit_warning=1
+exit_critical=2
+max_time=1.5
+urls=(
+  http://www.google.com/
+  https://www.google.com/
+  http://www.bing.com/
+  https://www.bing.com/
+  http://www.yahoo.com/
+  https://www.yahoo.com/
+)
+timer_format="\n\ntime_namelookup: %{time_namelookup}
+time_connect: %{time_connect}
+time_appconnect: %{time_appconnect}
+time_pretransfer: %{time_pretransfer}
+time_redirect: %{time_redirect}
+time_starttransfer: %{time_starttransfer}
+----------
+time_total: %{time_total}"
+
+for url in "${urls[@]}"; do
+  output=$(curl -v -w "$timer_format" -o /dev/null "$url" 2>&1)
+  if [[ $? != 0 ]]; then
+    echo -e "Request failed to $url\n\nOutput:\n$output"
+    exit $exit_critical
+  else
+    # Check for network IPv6 routing issues.
+    if [[ $output == *"No route to host"* ]]; then
+      echo -e "IPv6 failure to $url\n\nOutput:\n$output"
+      exit $exit_warning
+
+    # Check for network SSL interception issues.
+    elif [[ $output == *"Server certificate:"* && $output == *"O=National Renewable Energy Laboratory"*  ]]; then
+      echo -e "SSL failure to $url\n\nOutput:\n$output"
+      exit $exit_warning
+    else
+      # Check response times.
+      time_total=$(echo "$output" | grep -Eo "time_total: ([0-9\.]+)" | grep -Eo "[0-9\.]+")
+      if [[ $(echo "$time_total>$max_time" | bc -l) != 0 ]]; then
+        echo -e "Response time too long for $url\n\nOutput:\n$output"
+        exit $exit_warning
+      fi
+    fi
+  fi
+done
+
+echo "OK"
+exit $exit_ok
