@@ -8,7 +8,9 @@
 #
 
 include_recipe "opsview::client"
-include_recipe "python"
+python_runtime "2" do
+  provider :system
+end
 
 # https://github.com/opinkerfi/nagios-plugins/blob/master/check_yum/check_yum
 # Fork of: https://code.google.com/p/check-yum/

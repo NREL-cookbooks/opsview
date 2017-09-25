@@ -8,7 +8,9 @@
 #
 
 include_recipe "opsview::client"
-include_recipe "python"
+python_runtime "2" do
+  provider :system
+end
 
 package "pymongo"
 

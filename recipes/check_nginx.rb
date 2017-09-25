@@ -19,5 +19,7 @@ end
 
 # http://exchange.nagios.org/directory/Plugins/Web-Servers/nginx/check_nginx/details
 # Locally patched with fixed to performance output.
-include_recipe "python"
+python_runtime "2" do
+  provider :system
+end
 nrpe_plugin "check_nginx_conn"
