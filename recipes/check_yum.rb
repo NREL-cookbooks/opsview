@@ -12,15 +12,10 @@ python_runtime "2" do
   provider :system
 end
 
-# https://github.com/opinkerfi/nagios-plugins/blob/master/check_yum/check_yum
-# Fork of: https://code.google.com/p/check-yum/
-# This fork includes a couple handy features:
-# - "long-output" option to show the packages with security issues.
-# - Performance output to track number of security updates over time.
 nrpe_plugin "check_yum" do
   remote_file true
-  source "https://raw.githubusercontent.com/opinkerfi/nagios-plugins/944d47e18e5b03d514a5e3a56495b7817d424b97/check_yum/check_yum"
-  checksum "f87ed2321adedae350b5c4dc4f77127963d694e6ac29b639b43e8f5a86f99d86"
+  source "https://raw.githubusercontent.com/HariSekhon/nagios-plugins/25f7e1b66ffa8c63a6ecd5f5d032460599762ac4/check_yum.py"
+  checksum "204f06278cb14ff8f7a9c3e2d438288ccf180cf391c510017b50ba9ee6167551"
   sudo true
 end
 
