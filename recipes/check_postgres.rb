@@ -13,8 +13,8 @@ include_recipe "database::postgresql"
 # https://github.com/bucardo/check_postgres
 nrpe_plugin "check_postgres" do
   remote_file true
-  source "https://github.com/bucardo/check_postgres/raw/2.21.0/check_postgres.pl"
-  checksum "6693aed935835e7eaeab0a96fe810f04e15096026110d942f37a0ecbb2504df7"
+  source "https://raw.githubusercontent.com/bucardo/check_postgres/2.22.0/check_postgres.pl"
+  checksum "a61c1e50feabe5b7aeaa948489f8799a668588b38f6129728e5477b9139ba120"
 end
 
 node[:opsview][:check_postgres][:connections].each do |connection|
