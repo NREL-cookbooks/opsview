@@ -8,13 +8,8 @@
 #
 
 include_recipe "opsview::client"
-include_recipe "rbenv::system"
 
 rbenv_gem "redis"
-
-if(node[:languages][:ruby][:version].to_f < 1.9)
-  rbenv_gem "SystemTimer"
-end
 
 nrpe_plugin "check_redis" do
   source "nagios_plugins/nagios-check-redis/check_redis"

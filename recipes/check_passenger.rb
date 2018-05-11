@@ -8,7 +8,6 @@
 #
 
 include_recipe "opsview::client"
-include_recipe "rbenv::system"
 
 sudo "nagios_check_passenger" do
   user "nagios"
