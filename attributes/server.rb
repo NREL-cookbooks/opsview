@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-Chef::Recipe.send(:include, OpenSSLCookbook::RandomPassword)
+::Chef::Node.send(:include, OpenSSLCookbook::RandomPassword)
 
 default[:opsview][:db][:database] = "opsview"
 default[:opsview][:db][:username] = "opsview"
